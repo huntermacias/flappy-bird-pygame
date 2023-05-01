@@ -1,14 +1,25 @@
 import pygame
+import logging
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         
+		 # Set up logging
+        logging.basicConfig(filename='./data/flappy_bird.log', level=logging.DEBUG)
+        
+		# Initialize Pygame.mixer for sounds
+        try:
+            pygame.mixer.init()
+        except pygame.error as e:
+            logging.error("Pygame initialization failed: %s", e)
+            raise SystemExit
+        
         # Load the bird images
         self.images = [
-            pygame.image.load("bird1.png").convert_alpha(),
-            pygame.image.load("bird2.png").convert_alpha(),
-            pygame.image.load("bird3.png").convert_alpha()
+            pygame.image.load("./images/bird1.png").convert_alpha(),
+            pygame.image.load("./images/bird2.png").convert_alpha(),
+            pygame.image.load("./images/bird3.png").convert_alpha()
         ]
         
         # Set the initial image, position, and velocity of the bird
@@ -30,12 +41,19 @@ class Bird(pygame.sprite.Sprite):
         self.max_rotation = 25
         self.dead = False
         
+		# load bird sounds
+        self.flap_sound = pygame.mixer.Sound('./sounds/flap.mp3')
+        self.hit_sound = pygame.mixer.Sound('./sounds/hit.mp3')
+        self.swosh_sound = pygame.mixer.Sound('./sounds/hit.mp3')
+        self.swosh_sound.set_volume(0.1)
+        
 		# Set bird stat variables
         self.score = 0
         
     def collide(self, pipe):
         if self.rect.colliderect(pipe.rect):
             # Hit a pipe, rotate backwards and fall
+            self.hit_sound.play()
             self.dead = True
             self.velocity = 10
             self.rotation = -90
@@ -74,3 +92,7 @@ class Bird(pygame.sprite.Sprite):
         new_rect = rotated_image.get_rect(center=self.rect.center)
         self.image = rotated_image
         self.rect = new_rect
+        
+		# play flap sound
+        # self.flap_sound.play()
+        self.swosh_sound.play()

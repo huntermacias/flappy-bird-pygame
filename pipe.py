@@ -6,10 +6,10 @@ class Pipe(pygame.sprite.Sprite):
 
         # Load the pipe images
         if key == 'top':
-            self.pipe_image = pygame.image.load("pipe.png").convert_alpha()
+            self.pipe_image = pygame.image.load("./images/pipe.png").convert_alpha()
             self.image = pygame.transform.rotate(self.pipe_image, 180)
         else:
-            self.image = pygame.image.load("pipe.png").convert_alpha()
+            self.image = pygame.image.load("./images/pipe.png").convert_alpha()
             
 
         # Set the position and velocity of the pipe
